@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geolocation</title>
+</head>
+<body>
+    <button id="getLocationButton">Sử dụng vị trí hiện tại của tôi</button>
+    <p id="locationStatus"></p>
+
+    <script>
+        const button = document.getElementById("getLocationButton");
+        const statusElement = document.getElementById("locationStatus");
+
+        function getUserLocation() {
+            if (!navigator.geolocation) {
+                statusElement.textContent = "Trình duyệt của bạn không hỗ trợ Geolocation.";
+                return;
+            }
+
+            statusElement.textContent = "Đang xác định vị trí...";
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    statusElement.textContent = `Vị trí của bạn: Lat ${latitude}, Lon ${longitude}`;
+                },
+                (error) => {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            statusElement.textContent = "Bạn đã từ chối truy cập vị trí.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            statusElement.textContent = "Không thể xác định vị trí của bạn.";
+                            break;
+                        case error.TIMEOUT:
+                            statusElement.textContent = "Yêu cầu lấy vị trí bị hết thời gian.";
+                            break;
+                        default:
+                            statusElement.textContent = "Đã xảy ra lỗi khi lấy vị trí.";
+                    }
+                }
+            );
+        }
+
+        button.addEventListener("click", getUserLocation);
+    </script>
+</body>
+</html>
