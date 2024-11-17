@@ -1,49 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Geolocation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Address with LocationIQ</title>
 </head>
 <body>
-    <button id="getLocationButton">Sử dụng vị trí hiện tại của tôi</button>
-    <p id="locationStatus"></p>
+    <button id="getAddressButton">Get Address</button>
+    <p id="address">Address will appear here</p>
 
     <script>
-        const button = document.getElementById("getLocationButton");
-        const statusElement = document.getElementById("locationStatus");
+        const apiKey = "pk.422f65e9bf6d466451d971e88ec99852"; // Thay bằng API Key của bạn
 
-        function getUserLocation() {
-            if (!navigator.geolocation) {
-                statusElement.textContent = "Trình duyệt của bạn không hỗ trợ Geolocation.";
-                return;
-            }
-
-            statusElement.textContent = "Đang xác định vị trí...";
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    statusElement.textContent = `Vị trí của bạn: Lat ${latitude}, Lon ${longitude}`;
-                },
-                (error) => {
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            statusElement.textContent = "Bạn đã từ chối truy cập vị trí.";
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            statusElement.textContent = "Không thể xác định vị trí của bạn.";
-                            break;
-                        case error.TIMEOUT:
-                            statusElement.textContent = "Yêu cầu lấy vị trí bị hết thời gian.";
-                            break;
-                        default:
-                            statusElement.textContent = "Đã xảy ra lỗi khi lấy vị trí.";
+        document.getElementById("getAddressButton").addEventListener("click", () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        fetch(`https://us1.locationiq.com/v1/reverse.php?key=${apiKey}&lat=${latitude}&lon=${longitude}&format=json`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const address = data.display_name;
+                                document.getElementById("address").textContent = `Address: ${address}`;
+                            })
+                            .catch(error => {
+                                console.error("Error fetching address:", error);
+                                document.getElementById("address").textContent = "Error fetching address.";
+                            });
+                    },
+                    (error) => {
+                        console.error("Geolocation error:", error);
+                        document.getElementById("address").textContent = "Unable to get location.";
                     }
-                }
-            );
-        }
-
-        button.addEventListener("click", getUserLocation);
+                );
+            } else {
+                document.getElementById("address").textContent = "Geolocation is not supported by this browser.";
+            }
+        });
     </script>
 </body>
 </html>
