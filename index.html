@@ -6,11 +6,11 @@
     <title>Get Address with LocationIQ</title>
 </head>
 <body>
-    <button id="getAddressButton">Get Address</button>
-    <p id="address">Address will appear here</p>
+    <button id="getAddressButton">Sử dụng vị trí hiện tại của tôi</button>
+    <p id="address">Đang tìm vị trí của bạn...</p>
 
     <script>
-        const apiKey = "pk.422f65e9bf6d466451d971e88ec99852"; // Thay bằng API Key của bạn
+        const apiKey = "pk.422f65e9bf6d466451d971e88ec99852";
 
         document.getElementById("getAddressButton").addEventListener("click", () => {
             if (navigator.geolocation) {
@@ -25,16 +25,16 @@
                             })
                             .catch(error => {
                                 console.error("Error fetching address:", error);
-                                document.getElementById("address").textContent = "Error fetching address.";
+                                document.getElementById("address").textContent = "Lỗi khi tìm địa chỉ";
                             });
                     },
                     (error) => {
                         console.error("Geolocation error:", error);
-                        document.getElementById("address").textContent = "Unable to get location.";
+                        document.getElementById("address").textContent = "Không thể tìm được vị trí";
                     }
                 );
             } else {
-                document.getElementById("address").textContent = "Geolocation is not supported by this browser.";
+                document.getElementById("address").textContent = "Định vị địa lý không được hỗ trợ bởi trình duyệt này";
             }
         });
     </script>
