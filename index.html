@@ -6,10 +6,7 @@
     <title>Linh Ứng</title>
 </head>
 <body>
-    <button id="getAddressButton">Sử dụng vị trí hiện tại của tôi</button>
-    <p id="address">Đang tìm vị trí của bạn...</p>
-
-   <script>
+      <script>
 document.getElementById("getLocationBtn").onclick = function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
